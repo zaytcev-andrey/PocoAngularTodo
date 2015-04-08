@@ -41,6 +41,7 @@ ostream& operator<<(ostream& os, CTodoList& todoList)
     return os;
 }
 
+// implements REST api
 class CTodoHandler : public HTTPRequestHandler
 {
 public:
@@ -71,12 +72,11 @@ public:
         else if(!method.compare("DELETE"))
         {
             cerr << "Delete id:" << *(--tokenizer.end()) << endl;
-            std::string token_end = *(--tokenizer.end());
-            std::istringstream str_stream( token_end );
-            size_t id = 0;
-            str_stream >> id;
-            // size_t id=stoull(*(--tokenizer.end()));
-            // TodoServerApp::deleteTodo(id);
+            const std::string id_str = *(--tokenizer.end());
+            std::istringstream str_stream( id_str );
+            size_t erase_id = 0;
+            str_stream >> erase_id;
+            TodoServerApp::deleteTodo( erase_id );
         }
 
         resp.setStatus(HTTPResponse::HTTP_OK);
@@ -95,35 +95,7 @@ public:
 #include <fstream>      // std::ifstream
 #include <map>          // std::ifstream
 
-template < class T >
-class stream_copy 
-{
-public:
-     stream_copy( std::ostream_iterator< T >& out_it )
-          : out_it_( out_it )
-     {
-     }
-
-     void operator() ( const T& val )
-     {
-          (*out_it_) = val;
-          ++out_it_;
-          std::cout << val;
-          symbols_count_++;
-     }
-
-     static size_t get_copied_symbols_count()
-     {
-          return symbols_count_;
-     }
-private:
-     std::ostream_iterator< T >& out_it_;
-     static size_t symbols_count_;
-};
-
-template < class T >
-size_t stream_copy< T >::symbols_count_;
-
+// implements getting files - htmpl.index, app.js
 class CFileHandler : public HTTPRequestHandler
 {
     typedef std::map<const std::string, std::string> TStrStrMap;
