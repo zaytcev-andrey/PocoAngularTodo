@@ -1,7 +1,9 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <utility> 
+#include <utility>
+#include <iterator>
+#include <algorithm>
 
 #include "TodoServerApp.h"
 
@@ -93,6 +95,35 @@ public:
 #include <fstream>      // std::ifstream
 #include <map>          // std::ifstream
 
+template < class T >
+class stream_copy 
+{
+public:
+     stream_copy( std::ostream_iterator< T >& out_it )
+          : out_it_( out_it )
+     {
+     }
+
+     void operator() ( const T& val )
+     {
+          (*out_it_) = val;
+          ++out_it_;
+          std::cout << val;
+          symbols_count_++;
+     }
+
+     static size_t get_copied_symbols_count()
+     {
+          return symbols_count_;
+     }
+private:
+     std::ostream_iterator< T >& out_it_;
+     static size_t symbols_count_;
+};
+
+template < class T >
+size_t stream_copy< T >::symbols_count_;
+
 class CFileHandler : public HTTPRequestHandler
 {
     typedef std::map<const std::string, std::string> TStrStrMap;
@@ -171,12 +202,12 @@ public:
             resp.setContentType(getContentType(path));
             ostream& out = resp.send();
 
-            char c = ifs.get();
+            std::noskipws( ifs );
+            std::istream_iterator< char > ifs_it( ifs );
+            std::istream_iterator< char > ifs_eof;
+            std::ostream_iterator< char > out_it( out );
 
-            while (ifs.good()) {
-                out << c;
-                c = ifs.get();
-            }
+            std::copy( ifs_it, ifs_eof, out_it );                     
 
             out.flush();
         }
