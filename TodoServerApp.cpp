@@ -5,20 +5,31 @@
 #include <iterator>
 #include <algorithm>
 
+#include <Poco/DateTimeParser.h>
+
 #include "TodoServerApp.h"
 
 Poco::Mutex TodoServerApp::todoLock;
 CTodoList TodoServerApp::todoList;
+CRemovedTodoList TodoServerApp::deletedTodos;
 
-ostream& operator<<(ostream& os, CTodo& todo)
+ostream& operator<<(ostream& os, const Poco::DateTime& date_time )
 {
-    os << "{ \"_id\": "<< todo.getId() <<  ", \"text\": \"" << todo.getText() << "\" }";
+     os << date_time.second();
+     return os;
+}
+
+ostream& operator<<(ostream& os, TodoPtr todo)
+{
+    os << "{ \"_id\": "<< todo->getId() << 
+         ", \"text\": \"" << todo->getText() << "\"" <<
+         ", \"last_modified_time\": " << todo->getLastModifiedTime() << " }";
     return os;
 }
 
 ostream& operator<<(ostream& os, CTodoList& todoList)
 {
-    map<size_t, CTodo> todos = todoList.readList();
+    map<size_t, TodoPtr> todos = todoList.readList();
 
     os << "[";
     if(!todos.empty())
@@ -26,9 +37,9 @@ ostream& operator<<(ostream& os, CTodoList& todoList)
         if(todos.size() == 1)
             os << todos.begin()->second;
         else
-            for ( map<size_t, CTodo>::iterator it = todos.begin();;)
+            for ( map<size_t, TodoPtr>::iterator it = todos.begin();;)
             {
-                os << it->second ;
+                os << it->second;
                 if(++it != todos.end())
                     os << ',';
                 else
@@ -59,8 +70,8 @@ public:
         if(!method.compare("POST"))
         {
             cerr << "Create:" << form.get("text") << endl;
-            CTodo todo(form.get("text"));
-            TodoServerApp::createTodo(todo);
+            TodoPtr todo( new CTodo( form.get("text") ) );
+            TodoServerApp::createTodo( todo );
         }
         else if(!method.compare("PUT"))
         {
@@ -83,6 +94,25 @@ public:
         resp.setContentType("application/json");
         //resp.setContentLength(...);
         ostream& out = resp.send();
+
+        if ( req.has( "If-Modified-Since" ) )
+        {
+          const CTodoList& todos = TodoServerApp::readTodoList();
+          const Poco::DateTime& modified = todos.getLastModifiedTime();
+
+          Poco::DateTime modifiedSince;
+          int tzd;
+          Poco::DateTimeParser::parse(
+               req.get( "If-Modified-Since" ), modifiedSince, tzd );
+          if (modified <= modifiedSince)
+          {
+               resp.setContentLength( 0 );
+               resp.setStatusAndReason( Poco::Net::HTTPResponse::HTTP_NOT_MODIFIED );
+               resp.send();
+
+               return;
+          }
+        }
 
         cerr << TodoServerApp::readTodoList() << endl;
         out << TodoServerApp::readTodoList() << endl;
@@ -209,7 +239,7 @@ public:
     }
 };
 
-void TodoServerApp::createTodo(CTodo& todo)
+void TodoServerApp::createTodo( TodoPtr todo )
 {
     ScopedLock<Mutex> lock(todoLock);
     todoList.create(todo);
@@ -224,7 +254,8 @@ CTodoList& TodoServerApp::readTodoList()
 void TodoServerApp::deleteTodo(size_t id)
 {
     ScopedLock<Mutex> lock(todoLock);
-    todoList.del(id);
+    TodoPtr removed = todoList.del(id);
+    deletedTodos.insert( removed );
 }
 
 int TodoServerApp::main(const vector<string> &)

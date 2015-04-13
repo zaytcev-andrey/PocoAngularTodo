@@ -12,41 +12,111 @@
 #include <Poco/StringTokenizer.h>
 #include <Poco/URI.h>
 #include <Poco/Util/ServerApplication.h>
+#include <Poco/SharedPtr.h>
+#include <Poco/DateTime.h>
+
 
 using namespace Poco;
 using namespace Poco::Net;
 using namespace Poco::Util;
 using namespace std;
 
+class modifiable 
+{
+public:
+     virtual ~modifiable() {}
+
+     modifiable()
+          : last_modified_time_( Poco::DateTime() )
+     {}
+
+     virtual const Poco::DateTime& getLastModifiedTime() const 
+     { 
+          return last_modified_time_; 
+     }
+
+protected:
+
+     virtual void updateLastModifiedTime() 
+     { 
+          last_modified_time_ = Poco::DateTime(); 
+     }
+
+     virtual void setLastModifiedTime( const Poco::DateTime& date_time )
+     {
+          last_modified_time_ = date_time;
+     }
+
+private:
+     Poco::DateTime last_modified_time_;
+};
+
 /**
     Todo
 */
-class CTodo {
+class CTodo : public modifiable
+{
     size_t id;
     string text;
 public:
-    CTodo(string text): text(text){
+     explicit CTodo( const std::string& text)
+         : text(text)
+    {
     }
     /* getters & setters */
-    size_t getId(){ return id; }
-    void setId(size_t id){ this->id = id; }
-    string getText(){ return text; }
+    size_t getId() const { return id; }
+    void setId(size_t id)
+    { 
+         this->id = id;
+         updateLastModifiedTime();
+    }
+    std::string getText() const { return text; }
 };
+
+typedef Poco::SharedPtr<CTodo> TodoPtr;
 
 /**
     Список Todo
 */
-class CTodoList {
+class CTodoList : public modifiable
+{
     size_t id;
-    map<size_t, CTodo> todos;
+    map<size_t, TodoPtr> todos;
 
 public:
     CTodoList():id(0){}
     /* CRUD */
-    void create(CTodo& todo){ todo.setId(++id); todos.insert(pair<size_t,CTodo>(id, todo)); };
-    map<size_t, CTodo>& readList(){ return todos; }
-    void del(size_t id){ todos.erase(id); };
+    void create( TodoPtr todo)
+    { 
+         todo->setId(++id); 
+         todos.insert( std::pair< size_t, TodoPtr >( id, todo ) );
+         setLastModifiedTime( todo->getLastModifiedTime() );
 
+    }
+    map<size_t, TodoPtr>& readList(){ return todos; }
+    TodoPtr del( size_t id )
+    { 
+         TodoPtr removed = todos[ id ];
+         todos.erase( id );
+         updateLastModifiedTime();
+         return removed;
+    }
+
+};
+
+class CRemovedTodoList : public modifiable
+{
+     size_t id;
+     map<size_t, TodoPtr> todos;
+
+public:
+     /* CRUD */
+     void insert( TodoPtr todo)
+     { 
+          todos[ todo->getId() ] = todo;
+          updateLastModifiedTime();
+     }
+     map<size_t, TodoPtr>& readList(){ return todos; }
 };
 
 /**
@@ -56,7 +126,7 @@ class TodoServerApp : public ServerApplication
 {
 public:
     /* CRUD */
-    static void createTodo(CTodo& todo);
+    static void createTodo( TodoPtr todo);
     static CTodoList& readTodoList();
     //static void updateTodo(size_t id, CTodo& todo);
     static void deleteTodo(size_t id);
@@ -65,4 +135,5 @@ protected:
     int main(const vector<string> &);
     static Mutex todoLock;
     static CTodoList todoList;
+    static CRemovedTodoList deletedTodos;
 };
