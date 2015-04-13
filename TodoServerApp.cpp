@@ -64,6 +64,29 @@ public:
         cerr << "URI: " << uri.toString() << endl;
         cerr << "Method: " << req.getMethod() << endl;
 
+        if ( req.has( "If-Modified-Since" ) )
+        {                          
+             const std::string if_modified_since = req.get( "If-Modified-Since" );
+             cerr << "If-Modified-Since :" << if_modified_since << endl;
+             
+             // must be under the mutex
+             const CTodoList& todos = TodoServerApp::readTodoList();
+             const Poco::DateTime& modified = todos.getLastModifiedTime();
+
+             Poco::DateTime modifiedSince;
+             int tzd;
+             Poco::DateTimeParser::parse( if_modified_since, modifiedSince, tzd );
+
+             if (modified <= modifiedSince)
+             {
+                  resp.setContentLength( 0 );
+                  resp.setStatusAndReason( Poco::Net::HTTPResponse::HTTP_NOT_MODIFIED );
+                  resp.send();
+
+                  return;
+             }
+        }
+
         StringTokenizer tokenizer(uri.getPath(), "/", StringTokenizer::TOK_TRIM);
         HTMLForm form(req,req.stream());
 
@@ -92,27 +115,9 @@ public:
 
         resp.setStatus(HTTPResponse::HTTP_OK);
         resp.setContentType("application/json");
-        //resp.setContentLength(...);
+        //resp.setContentLength(  );
+
         ostream& out = resp.send();
-
-        if ( req.has( "If-Modified-Since" ) )
-        {
-          const CTodoList& todos = TodoServerApp::readTodoList();
-          const Poco::DateTime& modified = todos.getLastModifiedTime();
-
-          Poco::DateTime modifiedSince;
-          int tzd;
-          Poco::DateTimeParser::parse(
-               req.get( "If-Modified-Since" ), modifiedSince, tzd );
-          if (modified <= modifiedSince)
-          {
-               resp.setContentLength( 0 );
-               resp.setStatusAndReason( Poco::Net::HTTPResponse::HTTP_NOT_MODIFIED );
-               resp.send();
-
-               return;
-          }
-        }
 
         cerr << TodoServerApp::readTodoList() << endl;
         out << TodoServerApp::readTodoList() << endl;

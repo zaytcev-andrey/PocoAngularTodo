@@ -101,7 +101,6 @@ public:
          updateLastModifiedTime();
          return removed;
     }
-
 };
 
 class CRemovedTodoList : public modifiable
