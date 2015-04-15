@@ -5,8 +5,12 @@ function mainController($scope, $http) {
     $scope.formData = {};
     $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
+    var config = { headers: {
+            'If-Modified-Since': '2014-11-27 T14:37:00'
+        }
+    };
     // when landing on the page, get all todos and show them
-    $http.get('/api/todos')
+    $http.get('/api/todos', config)
         .success(function(data) {
             $scope.todos = data;
             console.log(data);

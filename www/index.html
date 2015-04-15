@@ -12,6 +12,7 @@
 
     <!-- SCROLLS -->
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+	<link type="text/css" rel="stylesheet" href="stylesheet.css"/>
     <style>
         html                    { overflow-y:scroll; }
         body                    { padding-top:50px; }
@@ -39,9 +40,10 @@
 
                 <!-- LOOP OVER THE TODOS IN $scope.todos -->
                 <div class="checkbox" ng-repeat="todo in todos">
-                    <label>
-                        <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }}
+                    <label class="inline_row">
+                        <input type="checkbox" ng-click="deleteTodo(todo._id)"> {{ todo.text }} 						
                     </label>
+					<p class="inline_row">Last modified time: {{ todo.last_modified_time }}</p>
                 </div>
 
             </div>
