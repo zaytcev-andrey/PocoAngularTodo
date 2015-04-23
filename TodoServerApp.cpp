@@ -12,6 +12,7 @@
 Poco::Mutex TodoServerApp::todoLock;
 CTodoList TodoServerApp::todoList;
 CRemovedTodoList TodoServerApp::deletedTodos;
+Poco::SharedPtr< doors_db > TodoServerApp::doors_storage_;
 
 ostream& operator<<(ostream& os, const Poco::DateTime& date_time )
 {
@@ -50,6 +51,42 @@ ostream& operator<<(ostream& os, CTodoList& todoList)
     os << "]\n";
 
     return os;
+}
+
+ostream& operator<<( ostream& os, const door::shared_ptr item )
+{
+     os << "{ \"_id\": "<< item->get_id() << 
+          ", \"doorname\": \"" << item->get_name() << "\"" <<
+          ", \"manname\": \"" << item->get_manufacturer_name() << "\"" <<
+          ", \"costbasis\": \"" << item->get_cost_basis() << "\"" <<
+          ", \"last_modified_time\": " << item->getLastModifiedTime() << " }";
+     
+     return os;
+}
+
+ostream& operator<<( ostream& os, doors_db::shared_doors doors_ptr )
+{
+     const std::vector< door::shared_ptr >& doors = *doors_ptr;
+     
+     os << "[";
+     if( !doors.empty() )
+     {
+          if( doors.size() == 1 )
+               os << *doors.begin();
+          else
+               for ( std::vector< door::shared_ptr >::const_iterator it = doors.begin();;)
+               {
+                    os << *it;
+                    if( ++it != doors.end() )
+                         os << ',';
+                    else
+                         break;
+               }
+
+     }
+     os << "]\n";
+
+     return os;
 }
 
 // implements REST api
@@ -119,8 +156,8 @@ public:
 
         ostream& out = resp.send();
 
-        cerr << TodoServerApp::readTodoList() << endl;
-        out << TodoServerApp::readTodoList() << endl;
+        cerr << TodoServerApp::readDoorsList() << endl;
+        out << TodoServerApp::readDoorsList() << endl;
 
         out.flush();
     }
@@ -244,6 +281,15 @@ public:
     }
 };
 
+TodoServerApp::TodoServerApp( const std::string& storage_path )
+{
+     if ( doors_storage_.isNull() )
+     {
+          Poco::SharedPtr< doors_db > tmp( new doors_db( storage_path ) );
+          doors_storage_.swap( tmp );
+     }
+}
+
 void TodoServerApp::createTodo( TodoPtr todo )
 {
     ScopedLock<Mutex> lock(todoLock);
@@ -261,6 +307,12 @@ void TodoServerApp::deleteTodo(size_t id)
     ScopedLock<Mutex> lock(todoLock);
     TodoPtr removed = todoList.del(id);
     deletedTodos.insert( removed );
+}
+
+doors_db::shared_doors TodoServerApp::readDoorsList()
+{
+     ScopedLock<Mutex> lock(todoLock);
+     return doors_storage_->get_doors();
 }
 
 int TodoServerApp::main(const vector<string> &)

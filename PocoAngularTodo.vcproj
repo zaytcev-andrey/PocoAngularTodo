@@ -41,14 +41,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\contrib\poco-1.6.0\Foundation\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\Net\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\Util\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\JSON\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\XML\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\CppUnit\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
-				MinimalRebuild="true"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\contrib\poco-1.6.0\Foundation\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\Net\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\Util\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\JSON\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\XML\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\CppUnit\include&quot;;&quot;$(SolutionDir)..\contrib\sqlite_3.8.9&quot;;&quot;$(SolutionDir)..\contrib\soci-3.2.3\include&quot;;&quot;$(SolutionDir)..\contrib\&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;SOCI_USE_BOOST"
+				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -61,8 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="sqlite_static_d.lib libsoci_core_3_2.lib libsoci_empty_3_2.lib libsoci_sqlite3_3_2.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(SolutionDir)..\contrib\poco-1.6.0\lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\contrib\poco-1.6.0\lib&quot;;&quot;$(SolutionDir)..\contrib\sqlite_3.8.9\lib&quot;;&quot;$(SolutionDir)..\contrib\soci-3.2.3\lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\lib\x86\debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -116,8 +117,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\contrib\poco-1.6.0\Foundation\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\Net\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\Util\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\JSON\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\XML\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\CppUnit\include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)..\contrib\poco-1.6.0\Foundation\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\Net\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\Util\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\JSON\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\XML\include&quot;;&quot;$(SolutionDir)..\contrib\poco-1.6.0\CppUnit\include&quot;;&quot;$(SolutionDir)..\contrib\sqlite_3.8.9&quot;;&quot;$(SolutionDir)..\contrib\soci-3.2.3\include&quot;;&quot;$(SolutionDir)..\contrib\&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;SOCI_USE_BOOST"
+				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -135,9 +137,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="$(SolutionDir)..\contrib\poco-1.6.0\lib"
+				AdditionalDependencies="$(SolutionDir)..\contrib\poco-1.6.0\lib sqlite_static_r.lib libsoci_core_3_2.lib libsoci_empty_3_2.lib libsoci_sqlite3_3_2.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(SolutionDir)..\contrib\poco-1.6.0\lib"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)..\contrib\poco-1.6.0\lib&quot;;&quot;$(SolutionDir)..\contrib\soci-3.2.3\lib\$(ConfigurationName)&quot;;&quot;$(SolutionDir)..\contrib\sqlite_3.8.9\lib&quot;;&quot;$(SolutionDir)..\lib\x86\release&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -176,6 +178,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\doors_db.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -210,7 +216,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\door.h"
+				>
+			</File>
+			<File
+				RelativePath=".\doors_db.h"
+				>
+			</File>
+			<File
+				RelativePath=".\i_modifiable.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MimeTypes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\modifiable_common.h"
 				>
 			</File>
 			<File

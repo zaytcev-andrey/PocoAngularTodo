@@ -9,15 +9,19 @@ function mainController($scope, $http) {
             'If-Modified-Since': '2014-11-27 T14:37:00'
         }
     };
-    // when landing on the page, get all todos and show them
-    $http.get('/api/todos', config)
+    // when landing on the page, get all doors and show them
+    $http.get('/api/doors', config)
         .success(function(data) {
-            $scope.todos = data;
+            $scope.doors = data;
             console.log(data);
         })
         .error(function(data) {
             console.log('Error: ' + data);
         });
+		
+	$scope.getSuitableDoors = function() {
+		console.log($scope.formData);
+	}
 
     // when submitting the add form, send the text to the node API
     $scope.createTodo = function() {

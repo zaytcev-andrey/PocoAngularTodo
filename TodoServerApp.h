@@ -15,46 +15,18 @@
 #include <Poco/SharedPtr.h>
 #include <Poco/DateTime.h>
 
+#include "modifiable_common.h"
+#include "doors_db.h"
 
 using namespace Poco;
 using namespace Poco::Net;
 using namespace Poco::Util;
 using namespace std;
 
-class modifiable 
-{
-public:
-     virtual ~modifiable() {}
-
-     modifiable()
-          : last_modified_time_( Poco::DateTime() )
-     {}
-
-     virtual const Poco::DateTime& getLastModifiedTime() const 
-     { 
-          return last_modified_time_; 
-     }
-
-protected:
-
-     virtual void updateLastModifiedTime() 
-     { 
-          last_modified_time_ = Poco::DateTime(); 
-     }
-
-     virtual void setLastModifiedTime( const Poco::DateTime& date_time )
-     {
-          last_modified_time_ = date_time;
-     }
-
-private:
-     Poco::DateTime last_modified_time_;
-};
-
 /**
     Todo
 */
-class CTodo : public modifiable
+class CTodo : public modifiable_common
 {
     size_t id;
     string text;
@@ -78,7 +50,7 @@ typedef Poco::SharedPtr<CTodo> TodoPtr;
 /**
     Список Todo
 */
-class CTodoList : public modifiable
+class CTodoList : public modifiable_common
 {
     size_t id;
     map<size_t, TodoPtr> todos;
@@ -103,7 +75,7 @@ public:
     }
 };
 
-class CRemovedTodoList : public modifiable
+class CRemovedTodoList : public modifiable_common
 {
      size_t id;
      map<size_t, TodoPtr> todos;
@@ -124,15 +96,20 @@ public:
 class TodoServerApp : public ServerApplication
 {
 public:
+    TodoServerApp( const std::string& storage_path );
+     
     /* CRUD */
     static void createTodo( TodoPtr todo);
     static CTodoList& readTodoList();
     //static void updateTodo(size_t id, CTodo& todo);
     static void deleteTodo(size_t id);
 
+    static doors_db::shared_doors readDoorsList();
+
 protected:
     int main(const vector<string> &);
     static Mutex todoLock;
     static CTodoList todoList;
     static CRemovedTodoList deletedTodos;
+    static Poco::SharedPtr< doors_db > doors_storage_;
 };
