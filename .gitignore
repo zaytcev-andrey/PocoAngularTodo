@@ -1,7 +1,7 @@
 # Visual Studio temp files
 *.ncb
-#.suo
-Debug/
+*.suo
+[Dd]ebug/
 
 # Compiled Object files
 *.slo
