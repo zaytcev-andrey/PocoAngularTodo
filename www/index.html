@@ -11,7 +11,7 @@
     <title>POCO/Angular Todo App</title>
 
     <!-- SCROLLS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 	<link type="text/css" rel="stylesheet" href="stylesheet.css"/>
     <style>
         html                    { overflow-y:scroll; }
@@ -23,6 +23,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
     <script src="js/app.js"></script>
+    <script src="js/index.js"></script>
 
 </head>
 <!-- SET THE CONTROLLER AND GET ALL TODOS -->
@@ -36,22 +37,34 @@
 		
 		<div>
 		<div id="door-query-form" class="row">
-            <div class="col-sm-8 col-sm-offset-2 text-center">
-				<form role="form" class="form-inline">
-                    <div class="form-group">
-                        <label for="email">Цена мин.:</label>
-						<input type="email" class="form-control input-lg text-center" placeholder="Цена мин." ng-model="formData.costbasismin">
-                    </div>
-                    <div class="form-group">
-                        <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-						<label for="email">Цена макс.:</label>
-						<input type="email" class="form-control input-lg text-center" placeholder="Цена макс." ng-model="formData.costbasismax">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg" ng-click="getSuitableDoors()">Find</button>
-                </form>
+            <div class="col-sm-8 text-center">
+                <div class="container">
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <label for="email">Цена мин.:</label>
+                            <input type="email" class="form-control input-lg text-center" placeholder="Цена мин." ng-model="formData.costbasismin">
+                        </div>
+                        <div class="form-group">
+                            <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+                            <label for="email">Цена макс.:</label>
+                            <input type="email" class="form-control input-lg text-center" placeholder="Цена макс." ng-model="formData.costbasismax">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg" ng-click="getSuitableDoors()">Find</button>
+                    </form>
+                </div>
             </div>
         </div>
 
+        <article class="wrapper" id="card1">
+            <a class="link"><div class="link-title inline-row" href="http://www.google.com">Link 1
+            </div></a>
+            <a class="link"><div class="link-title inline-row">Link 2
+            </div></a>
+            <a class="link"><div class="link-title inline-row">Link 3
+            </div></a>
+        </article>
+       
+        
         <!-- TODO LIST -->
 		<!---->
         <div id="doors-list" class="row" >
@@ -92,6 +105,11 @@
             </div>
         </div>
 
+    </div>
+    
+    <div class="background">
+    <div id='header'>
+    </div>
     </div>
 
 </body>
