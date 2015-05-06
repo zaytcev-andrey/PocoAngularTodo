@@ -19,8 +19,20 @@ function mainController($scope, $http) {
             console.log('Error: ' + data);
         });
 		
-	$scope.getSuitableDoors = function() {
-		console.log($scope.formData);
+	$scope.getSuitableDoors = function() {     
+        var get_doors_by_cost = '/api/doors' + 
+        '/costbasismax/' + $scope.formData.costbasismax + 
+        '/costbasismim/' + $scope.formData.costbasismin;
+        console.log(get_doors_by_cost);
+        return;
+        $http.get(get_doors_by_cost)
+            .success(function(data) {
+                $scope.doors = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
 	}
 
     // when submitting the add form, send the text to the node API
