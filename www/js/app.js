@@ -1,6 +1,24 @@
 // js/app.js
 var pocoTodo = angular.module('pocoTodo', []);
 
+function CostBasisMin( value ) {    
+    var value_ = 
+    ( value === 'undefined' || isNaN(value) ) ? 0: value;
+    
+    this.getValue = function() {
+        return value_;
+    }
+}
+
+function CostBasisMax( value ) {
+    var value_ = 
+    ( value === 'undefined' || isNaN(value) ) ? Math.pow(2, 30): value;    
+    
+    this.getValue = function() {
+        return value_;
+    }
+}
+
 function mainController($scope, $http) {
     $scope.formData = {};
     $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
@@ -20,11 +38,13 @@ function mainController($scope, $http) {
         });
 		
 	$scope.getSuitableDoors = function() {     
+        var costMin = new CostBasisMin($scope.formData.costbasismin);
+        var costMax = new CostBasisMax($scope.formData.costbasismax);
+        
         var get_doors_by_cost = '/api/doors' + 
-        '/costbasismax/' + $scope.formData.costbasismax + 
-        '/costbasismim/' + $scope.formData.costbasismin;
-        console.log(get_doors_by_cost);
-        return;
+        '/costbasismim/' + costMin.getValue() +
+        '/costbasismax/' + costMax.getValue();
+
         $http.get(get_doors_by_cost)
             .success(function(data) {
                 $scope.doors = data;

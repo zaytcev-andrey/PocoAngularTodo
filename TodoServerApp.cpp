@@ -1,9 +1,12 @@
+#define NOMINMAX
+
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <utility>
 #include <iterator>
 #include <algorithm>
+#include <limits>
 
 #include <Poco/DateTimeParser.h>
 
@@ -13,6 +16,53 @@ Poco::Mutex TodoServerApp::todoLock;
 CTodoList TodoServerApp::todoList;
 CRemovedTodoList TodoServerApp::deletedTodos;
 Poco::SharedPtr< doors_db > TodoServerApp::doors_storage_;
+
+class value_st
+{
+public:
+     explicit value_st( const std::string& value )
+          : value_( value )
+     {}
+
+     template < class T > 
+     operator T() const
+     {          
+          T vaule = T();
+
+          std::istringstream strm( value_ );
+          strm >> vaule;
+
+          return vaule;
+     }
+private:
+     std::string value_;
+};
+
+class uri_property
+{
+public:
+
+     uri_property( const std::string& name, const std::string& value )
+          : name_( name )
+          , value_( value )
+     {
+     }
+
+     value_st get_value() const
+     {          
+          return value_;
+     }
+
+     const std::string& get_name() const
+     {
+          return name_;
+     }
+
+private:
+
+     std::string name_;
+     value_st value_;
+};
 
 ostream& operator<<(ostream& os, const Poco::DateTime& date_time )
 {
@@ -124,21 +174,57 @@ public:
              }
         }
 
-        StringTokenizer tokenizer(uri.getPath(), "/", StringTokenizer::TOK_TRIM);
+        StringTokenizer tokenizer(uri.getPath(), "/", StringTokenizer::TOK_TRIM | StringTokenizer::TOK_IGNORE_EMPTY);
         HTMLForm form(req,req.stream());
 
-        if(!method.compare("POST"))
+        doors_db::shared_doors doors_request_result;
+        
+        if (!method.compare("GET"))
+        {
+            // check for details of resource
+            const std::string uri_str = uri.toString();
+
+            cerr << "Get:" << uri_str << endl;           
+                      
+            // parse params
+            if ( uri_str.find_first_of( "/api/doors" ) != std::string::npos )
+            {
+                 std::vector< uri_property > params;                                 
+                 
+                 const size_t token_offset = 2;
+                 for ( StringTokenizer::Iterator it = 
+                      tokenizer.begin() + token_offset; it != tokenizer.end(); ++it )
+                 {                      
+                      uri_property param( *it, *(++it) );
+                      params.push_back( param );
+                 }
+
+                 if ( params.size() > 1 )
+                 {                                            
+                      doors_request_result = TodoServerApp::readDoorsList( 
+                           params[ 0 ].get_value()
+                           , params[ 1 ].get_value() );
+                 }
+                 else // there are no any params, so just get all doors items
+                 {
+                      doors_request_result = TodoServerApp::readDoorsList();
+                 }
+            }
+        }
+        else if(!method.compare("POST"))
         {
             cerr << "Create:" << form.get("text") << endl;
             TodoPtr todo( new CTodo( form.get("text") ) );
             TodoServerApp::createTodo( todo );
+            doors_request_result = TodoServerApp::readDoorsList();
         }
         else if(!method.compare("PUT"))
         {
             cerr << "Update id:" << *(--tokenizer.end()) << endl;
-            cerr << "Update text:" << form.get("text") << endl;
+            cerr << "Update text:" << form.get("text") << endl;            
             //size_t id=stoull(*(--tokenizer.end()));
             //TodoServerApp::updateTodo(id, form.get("text"));
+            doors_request_result = TodoServerApp::readDoorsList();
         }
         else if(!method.compare("DELETE"))
         {
@@ -148,6 +234,7 @@ public:
             size_t erase_id = 0;
             str_stream >> erase_id;
             TodoServerApp::deleteTodo( erase_id );
+            doors_request_result = TodoServerApp::readDoorsList();
         }
 
         resp.setStatus(HTTPResponse::HTTP_OK);
@@ -156,8 +243,8 @@ public:
 
         ostream& out = resp.send();
 
-        cerr << TodoServerApp::readDoorsList() << endl;
-        out << TodoServerApp::readDoorsList() << endl;
+        cerr << doors_request_result << endl;
+        out << doors_request_result << endl;
 
         out.flush();
     }
@@ -313,6 +400,12 @@ doors_db::shared_doors TodoServerApp::readDoorsList()
 {
      ScopedLock<Mutex> lock(todoLock);
      return doors_storage_->get_doors();
+}
+
+doors_db::shared_doors TodoServerApp::readDoorsList( int cost_basis_min, int cost_basis_max )
+{
+     ScopedLock<Mutex> lock(todoLock);
+     return doors_storage_->get_doors( cost_basis_min, cost_basis_max );
 }
 
 int TodoServerApp::main(const vector<string> &)

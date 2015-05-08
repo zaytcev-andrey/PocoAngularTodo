@@ -9,6 +9,8 @@
 #include <soci/soci.h>
 #include <soci/soci-sqlite3.h>
 
+// TODO: implements class params for get doors
+
 class doors_db
 {
 public:
@@ -18,6 +20,7 @@ public:
      ~doors_db();
 
       shared_doors get_doors() const;
+      shared_doors get_doors( int cost_basis_min, int cost_basis_max ) const;
 
 private:
 

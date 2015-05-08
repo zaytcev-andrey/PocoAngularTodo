@@ -105,6 +105,7 @@ public:
     static void deleteTodo(size_t id);
 
     static doors_db::shared_doors readDoorsList();
+    static doors_db::shared_doors readDoorsList( int cost_basis_min, int cost_basis_max );
 
 protected:
     int main(const vector<string> &);

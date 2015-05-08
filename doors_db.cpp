@@ -188,3 +188,46 @@ doors_db::shared_doors doors_db::get_doors() const
           throw;
      }
 }
+
+doors_db::shared_doors doors_db::get_doors( int cost_basis_min, int cost_basis_max ) const
+{
+     try
+     {
+          soci::rowset< soci::row > rs = (
+               sql_session_.prepare << "select doors.id as id, \
+                                       doors.name as name, \
+                                       doors.cost_basis as cost_basis, \
+                                       doors_manufacturers.name as man_name \
+                                       from \
+                                       doors, doors_manufacturers \
+                                       where \
+                                       ( doors.manufacturer_id = doors_manufacturers.id ) and \
+                                       ( doors.cost_basis between :cost_basis_min and :cost_basis_max )"
+                                       , soci::use( cost_basis_min ), soci::use( cost_basis_max ) );
+
+          //const size_t rows_count = std::distance( rs.begin(), rs.end() );
+          shared_doors doors( new std::vector< door::shared_ptr >() );
+          //doors->reserve( rows_count );
+
+          for ( soci::rowset< soci::row >::const_iterator it = rs.begin(); it != rs.end(); ++it )
+          {
+               const soci::row& row = *it;
+
+               const int id = it->get< int >( 0 );
+               const std::string name = it->get< std::string >( 1 );
+               const int cost_basis = it->get< int >( 2 );
+               const std::string man_name = it->get< std::string >( 3 );
+
+               door::shared_ptr item( new door( id, name, man_name, cost_basis ) );
+
+               doors->push_back( item );
+          }
+
+          return doors;
+     }
+     catch( const soci::soci_error& err )
+     {
+          std::cerr << "db error: " << err.what() << std::endl;
+          throw;
+     }
+}
