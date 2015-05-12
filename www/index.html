@@ -12,7 +12,7 @@
 
     <!-- SCROLLS -->
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	<link type="text/css" rel="stylesheet" href="stylesheet.css"/>
+	<link type="text/css" rel="stylesheet" href="css/stylesheet.css"/>
     <style>
         html                    { overflow-y:scroll; }
         body                    { padding-top:50px; }
@@ -24,10 +24,23 @@
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
     <script src="js/app.js"></script>
     <script src="js/index.js"></script>
-
 </head>
 <!-- SET THE CONTROLLER AND GET ALL TODOS -->
 <body ng-controller="mainController">	
+	
+	<div class="background">
+		<div id='header'>
+		</div>
+		<div>
+			<header id="left_header">
+				<a href="#" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
+				<h1><strong>I am Strata</strong>, a super simple<br />
+					responsive site template freebie<br />
+					crafted by <a href="http://html5up.net">HTML5 UP</a>.</h1>
+			</header>
+		</div>
+	</div>
+	
 	<div class="container">
 
         <!-- HEADER AND TODO COUNT -->
@@ -36,24 +49,39 @@
         </div>
 		
 		<div>
-		<div id="door-query-form" class="row">
-            <div class="col-sm-8 text-center">
-                <div class="container">
-                    <form class="form-inline" role="form">
-                        <div class="form-group">
-                            <label>Цена мин.:</label>
-                            <input class="form-control input-lg text-center" placeholder="Цена мин." ng-model="formData.costbasismin">
-                        </div>
-                        <div class="form-group">
-                            <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-                            <label>Цена макс.:</label>
-                            <input class="form-control input-lg text-center" placeholder="Цена макс." ng-model="formData.costbasismax">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-lg" ng-click="getSuitableDoors()">Find</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+			<article class="wrapper" id="card1">
+				<div id="door-query-form" class="row">
+					<div class="col-sm-8 text-center">
+						<div class="container" style="display:box">
+							<form role="form" class="form-horizontal">
+								<div class="form-group">
+									<div class="col-sm-3">
+										<label>Цена мин.:</label>
+										<input class="form-control input-lg text-center" placeholder="Цена мин." ng-model="formData.costbasismin">
+									</div>
+									<div class="col-sm-3">
+										<label>Цена макс.:</label>
+										<input class="form-control input-lg text-center" placeholder="Цена макс." ng-model="formData.costbasismax">
+									</div>
+								</div>
+								<div class="form-group">									
+									<div class="col-sm-3">
+										<label>Производители</label>
+										<select class="form-control input-lg text-center">
+											<option>Все</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-6">
+										<button type="submit" class="btn btn-primary btn-lg pull-right" ng-click="getSuitableDoors()">Find</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</article>
 
         <article class="wrapper" id="card1">
             <a class="link"><div class="link-title inline-row" href="http://www.google.com">Link 1
@@ -106,12 +134,6 @@
         </div>
 
     </div>
-    
-    <div class="background">
-    <div id='header'>
-    </div>
-    </div>
-
 </body>
 </html>
 

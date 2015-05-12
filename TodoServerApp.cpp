@@ -325,7 +325,8 @@ public:
         URI uri(req.getURI());
         string path(uri.getPath());
 
-        ifstream ifs (getPath(path).c_str(), ifstream::in);
+        const std::string resource_path = getPath( path );
+        ifstream ifs ( resource_path.c_str(), std::ios_base::in | ios_base::binary );
 
         if(ifs)
         {
@@ -334,13 +335,38 @@ public:
             ostream& out = resp.send();
 
             std::noskipws( ifs );
-            std::istream_iterator< char > ifs_it( ifs );
+            std::istream_iterator< char > ifs_it( ifs );            
             std::istream_iterator< char > ifs_eof;
             std::ostream_iterator< char > out_it( out );
 
-            std::copy( ifs_it, ifs_eof, out_it );                     
+            std::copy( ifs_it, ifs_eof, out_it );
 
             out.flush();
+
+            /*
+            // dump
+                        std::string dump_str = resource_path;
+                        dump_str.insert( 5, "/dump" );
+            
+                        boost::filesystem::path dump_path( dump_str );
+            
+                        const boost::filesystem::path parent_path = dump_path.parent_path();
+                        if ( !boost::filesystem::exists( parent_path ) )
+                        {
+                             boost::filesystem::create_directories( parent_path );
+                        }
+            
+                        ofstream dump_ofs ( dump_str.c_str(), std::ios_base::out | ios_base::binary );
+            
+                        if ( ifs.eof() )
+                        {
+                             ifs.clear();
+                        }
+                        ifs.seekg( 0, std::ios_base::beg );
+                        std::istream_iterator< char > cerr_ifs_it( ifs );
+                        std::ostream_iterator< char > cerr_out_it( dump_ofs );
+                        std::copy( cerr_ifs_it, ifs_eof, cerr_out_it );*/
+            
         }
         else
         {
