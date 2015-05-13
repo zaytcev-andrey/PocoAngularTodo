@@ -114,20 +114,30 @@ ostream& operator<<( ostream& os, const door::shared_ptr item )
      return os;
 }
 
-ostream& operator<<( ostream& os, doors_db::shared_doors doors_ptr )
+ostream& operator<<( ostream& os, const doors_manufacturer::shared_ptr item )
 {
-     const std::vector< door::shared_ptr >& doors = *doors_ptr;
+     os << "{ \"_id\": "<< item->get_id() << 
+          ", \"manname\": \"" << item->get_name() << "\"" <<
+          ", \"last_modified_time\": " << item->getLastModifiedTime() << " }";
+
+     return os;
+}
+
+template< class T >
+ostream& operator<<( ostream& os, const Poco::SharedPtr< std::vector< Poco::SharedPtr< T > > >& db_items_ptr )
+{
+     const std::vector< Poco::SharedPtr< T > >& db_items = *db_items_ptr;
      
      os << "[";
-     if( !doors.empty() )
+     if( !db_items.empty() )
      {
-          if( doors.size() == 1 )
-               os << *doors.begin();
+          if( db_items.size() == 1 )
+               os << *db_items.begin();
           else
-               for ( std::vector< door::shared_ptr >::const_iterator it = doors.begin();;)
+               for ( std::vector< Poco::SharedPtr< T > >::const_iterator it = db_items.begin();;)
                {
                     os << *it;
-                    if( ++it != doors.end() )
+                    if( ++it != db_items.end() )
                          os << ',';
                     else
                          break;
@@ -145,6 +155,8 @@ class CTodoHandler : public HTTPRequestHandler
 public:
     void handleRequest(HTTPServerRequest &req, HTTPServerResponse &resp)
     {
+        // TODO: refactoring strongly recommended
+         
         URI uri(req.getURI());
         string method = req.getMethod();
 
@@ -186,6 +198,28 @@ public:
 
             cerr << "Get:" << uri_str << endl;           
                       
+            // pars api
+            if ( uri_str.find_first_of( "/api/doors/manufacturers" ) != std::string::npos )
+            {
+                 // TODO: refactoring strongly recommended
+
+                 doors_db::shared_doors_manufacturers doors_manufacturers_result =
+                      TodoServerApp::readDoorsManufacturers();
+
+                 resp.setStatus(HTTPResponse::HTTP_OK);
+                 resp.setContentType("application/json");
+                 //resp.setContentLength(  );
+
+                 ostream& out = resp.send();
+
+                 cerr << doors_manufacturers_result << endl;
+                 out << doors_manufacturers_result << endl;
+
+                 out.flush();
+
+                 return;
+            }
+
             // parse params
             if ( uri_str.find_first_of( "/api/doors" ) != std::string::npos )
             {
@@ -198,7 +232,7 @@ public:
                       uri_property param( *it, *(++it) );
                       params.push_back( param );
                  }
-
+                 
                  if ( params.size() > 1 )
                  {                                            
                       doors_request_result = TodoServerApp::readDoorsList( 
@@ -432,6 +466,12 @@ doors_db::shared_doors TodoServerApp::readDoorsList( int cost_basis_min, int cos
 {
      ScopedLock<Mutex> lock(todoLock);
      return doors_storage_->get_doors( cost_basis_min, cost_basis_max );
+}
+
+doors_db::shared_doors_manufacturers TodoServerApp::readDoorsManufacturers()
+{
+     ScopedLock<Mutex> lock(todoLock);
+     return doors_storage_->get_doors_manufacturers();
 }
 
 int TodoServerApp::main(const vector<string> &)

@@ -224,6 +224,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\doors_manufacturer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\i_modifiable.h"
 				>
 			</File>

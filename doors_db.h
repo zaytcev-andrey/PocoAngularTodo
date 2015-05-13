@@ -2,6 +2,7 @@
 #define doors_db_h__
 
 #include "door.h"
+#include "doors_manufacturer.h"
 
 #include <string>
 #include <vector>
@@ -15,12 +16,15 @@ class doors_db
 {
 public:
      typedef Poco::SharedPtr< std::vector< door::shared_ptr > > shared_doors;
+     typedef Poco::SharedPtr< std::vector< doors_manufacturer::shared_ptr > > shared_doors_manufacturers;
      
      doors_db( const std::string& storage_path );
      ~doors_db();
 
       shared_doors get_doors() const;
       shared_doors get_doors( int cost_basis_min, int cost_basis_max ) const;
+
+      shared_doors_manufacturers get_doors_manufacturers() const;
 
 private:
 

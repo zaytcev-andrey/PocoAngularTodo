@@ -231,3 +231,38 @@ doors_db::shared_doors doors_db::get_doors( int cost_basis_min, int cost_basis_m
           throw;
      }
 }
+
+doors_db::shared_doors_manufacturers doors_db::get_doors_manufacturers() const
+{
+     try
+     {
+          soci::rowset< soci::row > rs = (
+               sql_session_.prepare << "select doors_manufacturers.id as id, \
+                                       doors_manufacturers.name as man_name \
+                                       from \
+                                       doors_manufacturers" );
+
+          //const size_t rows_count = std::distance( rs.begin(), rs.end() );
+          shared_doors_manufacturers doors_manufacturers( new std::vector< doors_manufacturer::shared_ptr >() );
+          //doors->reserve( rows_count );
+
+          for ( soci::rowset< soci::row >::const_iterator it = rs.begin(); it != rs.end(); ++it )
+          {
+               const soci::row& row = *it;
+
+               const int id = it->get< int >( 0 );
+               const std::string name = it->get< std::string >( 1 );
+
+               doors_manufacturer::shared_ptr item( new doors_manufacturer( id, name ) );
+
+               doors_manufacturers->push_back( item );
+          }
+
+          return doors_manufacturers;
+     }
+     catch( const soci::soci_error& err )
+     {
+          std::cerr << "db error: " << err.what() << std::endl;
+          throw;
+     }
+}

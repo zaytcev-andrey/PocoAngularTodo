@@ -36,6 +36,15 @@ function mainController($scope, $http) {
         .error(function(data) {
             console.log('Error: ' + data);
         });
+        
+    $http.get('/api/doors/manufacturers', config)
+        .success(function(data) {
+            $scope.manufacturers = data;
+            console.log(data);
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
 		
 	$scope.getSuitableDoors = function() {     
         var costMin = new CostBasisMin($scope.formData.costbasismin);
