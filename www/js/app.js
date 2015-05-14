@@ -36,15 +36,6 @@ function mainController($scope, $http) {
         .error(function(data) {
             console.log('Error: ' + data);
         });
-        
-    $http.get('/api/doors/manufacturers', config)
-        .success(function(data) {
-            $scope.manufacturers = data;
-            console.log(data);
-        })
-        .error(function(data) {
-            console.log('Error: ' + data);
-        });
 		
 	$scope.getSuitableDoors = function() {     
         var costMin = new CostBasisMin($scope.formData.costbasismin);
@@ -62,6 +53,17 @@ function mainController($scope, $http) {
             .error(function(data) {
                 console.log('Error: ' + data);
             });
+	}
+	
+	$scope.getDoorsManufacturers = function() {
+		$http.get('/api/doors/manufacturers', config)
+        .success(function(data) {
+            $scope.manufacturers = data;
+            console.log(data);
+        })
+        .error(function(data) {
+            console.log('Error: ' + data);
+        });
 	}
 
     // when submitting the add form, send the text to the node API
