@@ -199,7 +199,7 @@ public:
             cerr << "Get:" << uri_str << endl;           
                       
             // pars api
-            if ( uri_str.find_first_of( "/api/doors/manufacturers" ) != std::string::npos )
+            if ( uri_str.find( "/api/doors/manufacturers" ) != std::string::npos )
             {
                  // TODO: refactoring strongly recommended
 
@@ -221,7 +221,7 @@ public:
             }
 
             // parse params
-            if ( uri_str.find_first_of( "/api/doors" ) != std::string::npos )
+            if ( uri_str.find( "/api/doors" ) != std::string::npos )
             {
                  std::vector< uri_property > params;                                 
                  
