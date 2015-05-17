@@ -25,6 +25,7 @@ public:
       shared_doors get_doors( int cost_basis_min, int cost_basis_max ) const;
 
       shared_doors_manufacturers get_doors_manufacturers() const;
+      // shared_doors_manufacturers get_doors_manufacturers() const;
 
 private:
 

@@ -26,22 +26,79 @@
     <script src="js/app.js"></script>
     <!-- dropdown enhancement from http://behigh.github.io/bootstrap_dropdowns_enhancement/ -->
     <script src="js/dropdowns-enhancement.js"></script>
-    <script src="js/index.js"></script>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.scrolly.min.js"></script>
+	<script src="js/jquery.scrollzer.min.js"></script>
+	<script src="js/skel.min.js"></script>
+	<script src="js/skel-layers.min.js"></script>
+	<script src="js/init.js"></script>
+	<script src="js/index.js"></script>
 </head>
 <!-- SET THE CONTROLLER AND GET ALL TODOS -->
 <body ng-controller="mainController">	
 	
+	<!-- New left Header -->
+	<div id="new_left_header" class="skel-layers-fixed">
+
+		<div class="top">
+
+			<!-- Logo -->
+				<div id="logo">
+					<span class="image avatar48"><img src="images/avatar.jpg" alt="" /></span>
+					<h1 id="title">Door-Expert.com</h1>
+					<p>Hyperspace Engineer</p>
+				</div>
+
+			<!-- Nav -->
+				<nav id="nav">
+					<!--
+						
+						Prologue's nav expects links in one of two formats:
+							
+						1. Hash link (scrolls to a different section within the page)
+							
+							<li><a href="#foobar" id="foobar-link" class="icon fa-whatever-icon-you-want skel-layers-ignoreHref"><span class="label">Foobar</span></a></li>
+
+						2. Standard link (sends the user to another page/site)
+
+							<li><a href="http://foobar.tld" id="foobar-link" class="icon fa-whatever-icon-you-want"><span class="label">Foobar</span></a></li>
+						
+					-->						
+					<ul>
+						<li ng-repeat="door in doors">
+							<a href="#doorpan_{{ door._id }}" id="door-link-{{door._id}}" class="skel-layers-ignoreHref"><span class="icon fa-home">{{ door.doorname }}</span></a></li>
+					</ul>
+				</nav>
+					
+		</div>
+			
+		<div class="bottom">
+
+			<!-- Social Icons -->
+				<ul class="icons">
+					<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+					<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+					<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+					<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+					<li><a href="#" class="icon fa-envelope"><span class="label">Email</span></a></li>
+				</ul>
+			
+		</div>
+		
+	</div>
+	
 	<div class="background">
 		<div id='header'>
 		</div>
-		<div>
+		
+		<!--div>
 			<header id="left_header">
 				<a href="#" class="image avatar"><img src="images/avatar.jpg" alt="" /></a>
 				<h1><strong>I am Strata</strong>, a super simple<br />
 					responsive site template freebie<br />
 					crafted by <a href="http://html5up.net">HTML5 UP</a>.</h1>
 			</header>
-		</div>
+		</div-->
 	</div>
 	
 	<div class="container">
@@ -68,16 +125,15 @@
 									</div>
 								</div>
 								<div class="form-group">									
-									<div class="col-sm-3" style="width: 190px">
+									<div class="col-sm-3">
 										<label>Производители</label>                                        
                                         <div class="btn-group">
-                                          <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" style="width: 190px" data-placeholder="Please select">Checked option <span class="caret"></span></button>
+                                          <button data-toggle="dropdown" class="btn btn-default dropdown-toggle" data-placeholder="Please select">Checked option <span class="caret"></span></button>
                                           <ul class="dropdown-menu">
-                                            <div ng-repeat="manufacturer in manufacturers">
-                                                <li>                                                  
-                                                  <label for="ex2_1"><input type="checkbox" id="ex2_1" name="ex2" value="{{ manufacturer._id }}">{{ manufacturer.manname }}<BR/></label>                                                  
-                                                </li>
-                                            </div>
+                                            <li ng-repeat="manufacturer in manufacturers">                                                  
+                                               <input type="checkbox" id="ex2_{{ manufacturer._id }}" name="ex2" value="{{ manufacturer._id }}" ng-model="formData.manufacturer._id">
+											   <label for="ex2_{{ manufacturer._id }}">{{ manufacturer.manname }}</label> 
+                                            </li>
                                           </ul>
                                         </div>
                                     </div>
@@ -110,7 +166,7 @@
 
                 <!-- LOOP OVER THE TODOS IN $scope.todos -->
                 <div ng-repeat="door in doors">
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" id="doorpan_{{ door._id }}">
 						<div class="panel-heading">
 							<label>
 								<input type="checkbox" ng-click="deleteTodo(door._id)"> {{ door.doorname }} 						
@@ -118,7 +174,12 @@
 						</div>
 						<div class="panel-body">
 							<p class="inline_row">Базовая стоимость: {{ door.costbasis }}</p>
-							<p class="inline_row">Производитель: {{ door.manname }}</p>					
+							<p class="inline_row">Производитель: {{ door.manname }}</p>
+							<p class="inline_row">Защищенность конструкции двери: {{ door.constructionprotection }}</p>
+							<p class="inline_row">Класс защиты: {{ door.protectclassname }}</p>							
+							<p class="inline_row">Количество замков: {{ door.lockscount }}</p>
+							<p class="inline_row">Основной замок: {{ door.firstlockname }}</p>
+							<p class="inline_row" ng-show="{{door.lockscount}}==2">Дополнительный замок: {{ door.secondlockname }}</p>
 							<p class="inline_row">Last modified time: {{ door.last_modified_time }}</p>
 						</div>
 					</div>

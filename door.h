@@ -13,11 +13,21 @@ public:
      door( int id
           , const std::string& name
           , const std::string& manufacturer_name
-          , int cost_basis )
+          , int cost_basis
+          , int locks_count
+          , const std::string& first_lock_name
+          , const std::string& second_lock_name
+          , int construction_protection
+          , const std::string& protection_class_name )
           : id_( id )
           , name_( name )
           , manufacturer_name_( manufacturer_name )
           , cost_basis_( cost_basis )
+          , locks_count_( locks_count )
+          , first_lock_name_( first_lock_name )
+          , second_lock_name_( second_lock_name )
+          , construction_protection_( construction_protection )
+          , protection_class_name_( protection_class_name )
      {
      }
 
@@ -41,11 +51,41 @@ public:
           return cost_basis_;
      }
 
+     int get_locks_count() const
+     {
+          return locks_count_;
+     }
+
+     std::string get_first_lock_name() const
+     {
+          return first_lock_name_;
+     }
+
+     std::string get_second_lock_name() const
+     {
+          return second_lock_name_;
+     }
+
+     int get_construction_protection() const
+     {
+          return construction_protection_;
+     }
+
+     std::string get_protection_class_name() const
+     {
+          return protection_class_name_;
+     }
+     
 private:
-     const int id_;
-     const std::string name_;
-     const std::string manufacturer_name_;
-     const int cost_basis_;
+     int id_;
+     std::string name_;
+     std::string manufacturer_name_;
+     int cost_basis_;
+     int locks_count_;
+     std::string first_lock_name_;
+     std::string second_lock_name_;
+     int construction_protection_;
+     std::string protection_class_name_;
 };
 
 #endif // door_h__

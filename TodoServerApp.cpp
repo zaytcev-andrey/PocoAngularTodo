@@ -109,6 +109,11 @@ ostream& operator<<( ostream& os, const door::shared_ptr item )
           ", \"doorname\": \"" << item->get_name() << "\"" <<
           ", \"manname\": \"" << item->get_manufacturer_name() << "\"" <<
           ", \"costbasis\": \"" << item->get_cost_basis() << "\"" <<
+          ", \"lockscount\": \"" << item->get_locks_count() << "\"" <<
+          ", \"firstlockname\": \"" << item->get_first_lock_name() << "\"" <<
+          ", \"secondlockname\": \"" << item->get_second_lock_name() << "\"" <<
+          ", \"constructionprotection\": \"" << item->get_construction_protection() << "\"" <<
+          ", \"protectclassname\": \"" << item->get_protection_class_name() << "\"" <<
           ", \"last_modified_time\": " << item->getLastModifiedTime() << " }";
      
      return os;
