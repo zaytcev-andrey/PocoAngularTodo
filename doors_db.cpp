@@ -451,3 +451,38 @@ doors_db::shared_doors_manufacturers doors_db::get_doors_manufacturers() const
           throw;
      }
 }
+
+doors_db::shared_door_protection_classes doors_db::get_protection_classes() const
+{
+     try
+     {
+          soci::rowset< soci::row > rs = (
+               sql_session_.prepare << "select door_protection_classes.id as id, \
+                                       door_protection_classes.name as prot_class_name \
+                                       from \
+                                       door_protection_classes" );
+
+          //const size_t rows_count = std::distance( rs.begin(), rs.end() );
+          shared_door_protection_classes doors_protection_classes( new std::vector< door_protection_class::shared_ptr >() );
+          //doors->reserve( rows_count );
+
+          for ( soci::rowset< soci::row >::const_iterator it = rs.begin(); it != rs.end(); ++it )
+          {
+               const soci::row& row = *it;
+
+               const int id = it->get< int >( 0 );
+               const std::string name = it->get< std::string >( 1 );
+
+               door_protection_class::shared_ptr item( new door_protection_class( id, name ) );
+
+               doors_protection_classes->push_back( item );
+          }
+
+          return doors_protection_classes;
+     }
+     catch( const soci::soci_error& err )
+     {
+          std::cerr << "db error: " << err.what() << std::endl;
+          throw;
+     }
+}

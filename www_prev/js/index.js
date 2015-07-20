@@ -5,9 +5,9 @@ $('#fab').on("click", function() {
 });
 
 //Parallax
-/*$(window).scroll(function(e) { off for debug
+$(window).scroll(function(e) {
   parallax();
-});*/
+});
 
 function parallax() {
   var scrolled = $(window).scrollTop();

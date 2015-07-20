@@ -107,6 +107,7 @@ public:
     static doors_db::shared_doors readDoorsList();
     static doors_db::shared_doors readDoorsList( int cost_basis_min, int cost_basis_max );
     static doors_db::shared_doors_manufacturers readDoorsManufacturers();
+    static doors_db::shared_door_protection_classes readDoorsProtectionClasses();
 
 protected:
     int main(const vector<string> &);

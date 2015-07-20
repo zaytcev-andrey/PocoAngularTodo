@@ -1,70 +1,5 @@
 // js/app.js
-var pocoTodo = angular.module('pocoTodo', ['ui-rangeSlider'])
-
-pocoTodo.directive('tdMydir', ['$timeout', function ($timeout) {
-    return {
-        link: function ($scope, element, attrs) {
-			console.log('under directive');
-            $scope.$on('doorsloaded', function () {
-                $timeout(function () { // You might need this timeout to be sure its run after DOM render.
-					//angular.element('.scrolly').scrolly();
-					
-					console.log('under doorsloaded');
-					
-					var $nav_a = $('#nav a');
-					
-					$nav_a
-					.scrolly()
-					.on('click', function(e) {
-
-						console.log('i am on click!!!!!!!');
-						
-						var t = $(this),
-							href = t.attr('href');
-
-						if (href[0] != '#')
-							return;
-
-						e.preventDefault();
-
-						// Clear active and lock scrollzer until scrolling has stopped
-							$nav_a
-								.removeClass('active')
-								.addClass('scrollzer-locked');
-
-						// Set this link to active
-							t.addClass('active');
-
-					});
-
-
-					// Initialize scrollzer.
-					var ids = [];
-
-					$nav_a.each(function() {
-
-						var href = $(this).attr('href');
-
-						if (href[0] != '#')
-							return;
-
-						ids.push(href.substring(1));
-
-						console.log(href.substring(1));
-					});
-					
-					console.log(ids);
-					
-					console.log($.scrollzer);
-
-					angular.element.scrollzer(ids, { pad: 200, lastHack: true }); // it works, is equivalent following string
-					//$.scrollzer(ids, { pad: 200, lastHack: true });
-					
-                }, 0, false);
-            })
-        }
-    };
-}]);
+var pocoTodo = angular.module('pocoTodo', []);
 
 function CostBasisMin( value ) {    
     var value_ = 
@@ -84,16 +19,9 @@ function CostBasisMax( value ) {
     }
 }
 
-function SortByKey(array, key) {
-    return array.sort(function(a, b) {
-        var x = a[key]; var y = b[key];
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
- });
-}
-
 function mainController($scope, $http) {
-	$scope.formData = { constructionprotection: 2, protectionclassesmin: 0, protectionclassesmin: 0, lockscount: 1 };
-	$scope.protectionclasses = { classes: {}, min: 0, max: 300 };
+
+    $scope.formData = {};
     $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
     var config = { headers: {
@@ -113,7 +41,6 @@ function mainController($scope, $http) {
             .success(function(data) {
                 $scope.doors = data;
                 console.log(data);
-				$scope.$broadcast('doorsloaded');
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -131,35 +58,17 @@ function mainController($scope, $http) {
         });
 	}
 	
-	$scope.getDoorsProtectionClasses = function() {
-		$http.get('/api/doors/protectionclasses', config)
-        .success(function(data) {
-			console.log('Protection Classes !!!!!');
-			SortByKey(data, 'protectclassname');
-			$scope.protectionclasses = { classes: data, min: data[0]._id, max: data[data.length-1]._id };            
-			console.log($scope.protectionclasses);
-			console.log('End Protection Classes !!!!!');
-        })
-        .error(function(data) {
-			console.log('Error Protection Classes !!!!!');
-            console.log('Error: ' + data);
-        });
-	}
-	
-	$scope.getDoorsManufacturers();
-	$scope.getDoorsProtectionClasses();
-	
 	// when landing on the page, get all doors and show them
     $http.get('/api/doors', config)
         .success(function(data) {
             $scope.doors = data;
-            console.log(data);
-			$scope.$broadcast('doorsloaded');
+            console.log(data);			
         })
         .error(function(data) {
             console.log('Error: ' + data);
         });	
 	
+	$scope.getDoorsManufacturers();
 
     // when submitting the add form, send the text to the node API
     $scope.createTodo = function() {
@@ -185,5 +94,6 @@ function mainController($scope, $http) {
                 console.log('Error: ' + data);
             });
     };
+
 }
 

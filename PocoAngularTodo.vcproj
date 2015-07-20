@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\door_protection_class.h"
+				>
+			</File>
+			<File
 				RelativePath=".\doors_db.h"
 				>
 			</File>

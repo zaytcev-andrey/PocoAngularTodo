@@ -128,6 +128,15 @@ ostream& operator<<( ostream& os, const doors_manufacturer::shared_ptr item )
      return os;
 }
 
+ostream& operator<<( ostream& os, const door_protection_class::shared_ptr item )
+{
+     os << "{ \"_id\": "<< item->get_id() << 
+          ", \"protectclassname\": \"" << item->get_name() << "\"" <<
+          ", \"last_modified_time\": " << item->getLastModifiedTime() << " }";
+
+     return os;
+}
+
 template< class T >
 ostream& operator<<( ostream& os, const Poco::SharedPtr< std::vector< Poco::SharedPtr< T > > >& db_items_ptr )
 {
@@ -219,6 +228,27 @@ public:
 
                  cerr << doors_manufacturers_result << endl;
                  out << doors_manufacturers_result << endl;
+
+                 out.flush();
+
+                 return;
+            }
+
+            if ( uri_str.find( "/api/doors/protectionclasses" ) != std::string::npos )
+            {
+                 // TODO: refactoring strongly recommended
+
+                 doors_db::shared_door_protection_classes doors_protection_result =
+                      TodoServerApp::readDoorsProtectionClasses();
+
+                 resp.setStatus(HTTPResponse::HTTP_OK);
+                 resp.setContentType("application/json");
+                 //resp.setContentLength(  );
+
+                 ostream& out = resp.send();
+
+                 cerr << doors_protection_result << endl;
+                 out << doors_protection_result << endl;
 
                  out.flush();
 
@@ -477,6 +507,12 @@ doors_db::shared_doors_manufacturers TodoServerApp::readDoorsManufacturers()
 {
      ScopedLock<Mutex> lock(todoLock);
      return doors_storage_->get_doors_manufacturers();
+}
+
+doors_db::shared_door_protection_classes TodoServerApp::readDoorsProtectionClasses()
+{
+     ScopedLock<Mutex> lock(todoLock);
+     return doors_storage_->get_protection_classes();
 }
 
 int TodoServerApp::main(const vector<string> &)

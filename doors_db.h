@@ -3,6 +3,7 @@
 
 #include "door.h"
 #include "doors_manufacturer.h"
+#include "door_protection_class.h"
 
 #include <string>
 #include <vector>
@@ -17,6 +18,7 @@ class doors_db
 public:
      typedef Poco::SharedPtr< std::vector< door::shared_ptr > > shared_doors;
      typedef Poco::SharedPtr< std::vector< doors_manufacturer::shared_ptr > > shared_doors_manufacturers;
+     typedef Poco::SharedPtr< std::vector< door_protection_class::shared_ptr > > shared_door_protection_classes;
      
      doors_db( const std::string& storage_path );
      ~doors_db();
@@ -25,7 +27,7 @@ public:
       shared_doors get_doors( int cost_basis_min, int cost_basis_max ) const;
 
       shared_doors_manufacturers get_doors_manufacturers() const;
-      // shared_doors_manufacturers get_doors_manufacturers() const;
+      shared_door_protection_classes get_protection_classes() const;
 
 private:
 

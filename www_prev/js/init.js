@@ -78,21 +78,17 @@
 
 			}
 
+		// Scrolly links.
+			$('.scrolly').scrolly();
+
 		// Nav.
 			var $nav_a = $('#nav a');
-			
-			var angulardirective=/.*\{\{.*\}\}/g;
-			if (!$nav_a.attr('href').match(angulardirective)){
-				// Scrolly links.
-				$('.scrolly').scrolly();
-				
-				// Scrolly-fy links.
+
+			// Scrolly-fy links.
 				$nav_a
 					.scrolly()
 					.on('click', function(e) {
 
-						console.log('i am on click!!!!!!!');
-						
 						var t = $(this),
 							href = t.attr('href');
 
@@ -123,15 +119,10 @@
 
 					ids.push(href.substring(1));
 
-					console.log(href.substring(1));
 				});
 
-				//$.scrollzer(ids, { pad: 200, lastHack: true });*/
-			}
-			else{
-				console.log('angular directive arised, return!');
-				return;
-			}
+				$.scrollzer(ids, { pad: 200, lastHack: true });
+
 	});
 
 })(jQuery);
