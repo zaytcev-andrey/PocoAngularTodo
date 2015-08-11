@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<!-- saved from url=(0086)http://s.codepen.io/boomerang/913d49034d5b547d8850628837052bba1433744107330/index.html -->
+<html class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex"><link rel="canonical" href="Responsive Material Layout.html">
+
+
+<style class="cp-pen-styles">@import url(http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900);
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6em;
+  letter-spacing: 1px;
+  color: #555;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:active {
+  color: #555;
+}
+
+a:visited {
+  color: #555;
+}
+
+a:hover {
+  color: #555;
+}
+
+p {
+  margin-bottom: 1.6em;
+}
+
+header {
+  margin: 0 0 20px 0;
+  border-bottom: solid 1px #e0e0e0;
+}
+
+.pageTitle,
+.pageSubTitle {
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+  color: #777;
+}
+
+.pageTitle {
+  color: #ff7600;
+}
+
+.pageTitle {
+  font-size: 31px;
+  font-weight: 700;
+  line-height: 37px;
+}
+
+.pageSubTitle {
+  font-size: 1.4em;
+  font-weight: 300;
+  margin-bottom: 1em;
+}
+
+.para {
+  position: fixed width: 100%;
+  top: 0;
+  height: 300%;
+  ;
+}
+
+.background {
+  position: fixed;
+  z-index: -1;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300%;
+  background-color: #f0f0f0;
+  background-size: 100% auto;
+}
+
+.content {
+  width: 60%;
+  margin-top: 150px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#header {
+  height: 200px;
+  -webkit-transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  transform: scaleX(-1);
+  background-image: url('http://3.bp.blogspot.com/-a4JOdrhZBXI/UcTNSycowvI/AAAAAAAAAtk/9brebqGwNiw/s1600/Google-Now-Backgrounds-Tahoe-Dawn.jpg');
+  background-position: center center;
+  background-size: cover;
+  filter: FlipH;
+  -ms-filter: 'FlipH';
+}
+
+#fab-wrap {
+  position: absolute;
+  top: 200px;
+  height: 56px;
+  right: 0;
+  width: 13%;
+  -webkit-transition: all 600ms cubic-bezier((.77, 0, .175, 1));
+  -webkit-transition: opacity .3s;
+  -o-transition: all 600ms cubic-bezier((.77, 0, .175, 1));
+  -o-transition: opacity .3s;
+  transition: all 600ms cubic-bezier((.77, 0, .175, 1));
+  transition: opacity .3s;
+}
+
+#fab {
+  display: flex;
+  width: 56px;
+  height: 56px;
+  margin-right: auto;
+  margin-left: auto;
+  cursor: pointer;
+  -webkit-transition: background-color .2s;
+  -o-transition: background-color .2s;
+  transition: background-color .2s;
+  border-radius: 50%;
+  background-color: #fb5e0b;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, .17);
+  justify-content: center;
+  transform: translate(0%, -50%);
+}
+
+#fab:hover {
+  -webkit-box-shadow: 0 5px 4px rgba(0, 0, 0, .4);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, .4);
+}
+
+#fab:active {
+  background-color: #fb6e21;
+}
+
+#fab-action {
+  z-index: 3;
+  padding-top: 16px;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+svg {
+  transform: scale(1.25);
+  fill: #fdfdfd;
+}
+
+.wrapper {
+  position: relative;
+  display: block;
+  width: auto;
+  margin-bottom: 20px;
+  padding: 25px;
+  padding-left: 30px;
+  background: #fff;
+  box-shadow: 0 3px 3px 1px rgba(0, 0, 0, .15);
+}
+
+.center {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.link {
+  display: inline-block;
+  width: 18%;
+  height: 150px;
+  margin: .4vw;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: all .2s cubic-bezier(.4, 0, .2, 1);
+  border-radius: .125em;
+  background-color: rgba(239, 239, 239, 1.00);
+  box-shadow: 0 3px 3px rgba(126, 111, 111, .2);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.link:hover {
+  box-shadow: 0 3px 4px rgba(126, 111, 111, .5);
+}
+
+.link:active {
+  background-color: rgba(220, 220, 220, 1.00);
+}
+
+h3 {
+  font-family: Roboto;
+  font-size: 1em;
+  font-weight: 700;
+  position: relative;
+  bottom: 0;
+  padding: 7px 0;
+  text-align: left;
+  text-indent: 10px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  background-color: rgba(255, 255, 255, .70);
+}
+
+@media screen and (max-width: 1280px) {
+  .link {
+    width: 23%;
+  }
+  .content {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 1060px) {
+  .link {
+    width: 31%;
+  }
+  .content {
+    width: 75%;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .link {
+    width: 48%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .content {
+    width: 94%;
+  }
+  #fab-wrap {
+    top: 150px;
+    right: 25px;
+  }
+  .wrapper {
+    padding-top: 55px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .content {
+    width: 100%;
+    height: 200px;
+  }
+  .wrapper {
+    margin-bottom: 5px;
+  }
+  .link {
+    width: 100%;
+  }
+}</style></head><body>
+<div class="content">
+  <article class="wrapper" id="card1">
+
+    <h1 class="pageTitle">Responsive Material Layout</h1>
+    <h2 class="pageSubTitle">Responsive, Parallax and material</h2>
+
+    <a class="link" id="fb"><h3>Link 1
+    </h3></a>
+
+    <a class="link"><h3>Link 2
+    </h3></a>
+
+    <a class="link"><h3>Link 3
+    </h3></a>
+
+    <a class="link"><h3>Link 4
+    </h3></a>
+
+    <a class="link"><h3>Link 5
+    </h3></a>
+  </article>
+  <article class="wrapper">
+    <header>
+      <h1 class="pageTitle">A little bit of info</h1>
+      <h2 class="pageSubTitle">Add links with the fab button, resize your browser &amp; scroll !</h2>
+    </header>
+    <section>
+      <p>I highly suggest to download source files before correcting some layout problems. Most of them (link titles, excessive margins above and beneath card titles, no full display of the 'phone' layout) are due to rendering here in Codepen. I don't get them on Firefox or Chrome. Even Internet Explorer shows things properly. This may be caused by incorrect loaded scripts, as I mostly done it in Dreamweaver.</p>
+
+      <p>The intial goal of this pen is to create a Material startpage and this is just the beginning. Layout isn't perfect yet (proper animation when the fab disappear) and I hope solutions are gonna come.
+      Beside the layout, I'll still have a lot of things to work out : Modal window on fab click, ASP/PHP request to manage existing/new shortcut, sub-FAB buttons to access bookmarks/history/plugins, automatic thumbnail site retrieving based on link...
+      I will take the time needed, as I'm just learning all of these languages, and it's not a full time job !</p>
+    </section>
+  </article>
+
+  <article class="wrapper">
+    <header>
+      <h2 class="pageSubTitle">A card to showcase the parallax effect</h2>
+    </header>
+    <section>
+      <p>And I'll just add another paragraph for the parallax effect : Vivamus tincidunt tortor et elementum tempor. Morbi consequat sapien nec maximus interdum. Nullam gravida mauris sed hendrerit viverra. Quisque ultrices malesuada leo in auctor. Aliquam
+      erat volutpat. Nunc et elit ac ante mattis vehicula eu sed ex. Integer dapibus volutpat gravida. Nulla sodales turpis accumsan eros suscipit, viverra elementum erat fringilla. Nunc mollis sit amet ex ut commodo. Mauris a pharetra ipsum, id condimentum
+      lorem. Duis sed volutpat elit. Nullam aliquam libero ipsum, vitae elementum est mattis in. Aliquam convallis orci sit amet mi pellentesque interdum. Etiam aliquet, sem non eleifend fermentum, ipsum arcu congue purus, quis interdum nisi orci id
+      nisl. Nullam feugiat facilisis felis quis dapibus.</p>
+
+      <p>Duis consequat, nunc vel bibendum tristique, eros leo ullamcorper tellus, et molestie mi ex ut mauris. Quisque sit amet enim augue. Mauris efficitur metus lorem, eu molestie urna elementum sed. Nam vel sodales enim. Sed suscipit bibendum cursus.
+      Nulla id tempor velit, aliquam sodales odio. Duis sit amet magna leo.</p>
+
+      <p>Vestibulum efficitur nunc vitae lacus consectetur, vitae convallis ex euismod. Maecenas ultrices massa sit amet libero euismod facilisis. Morbi non nulla nec ex suscipit bibendum eget a urna. Donec ullamcorper, nisl vitae congue dapibus, felis ex
+      tristique elit, at condimentum quam leo id mi. Fusce quis ligula consequat, gravida erat ullamcorper, semper nunc. Nullam ac augue justo. Pellentesque augue mi, porttitor non tempus quis, efficitur id sem. Duis enim arcu, laoreet at malesuada
+      ut, tempor in eros. Sed blandit eros eget erat dignissim tincidunt. Donec risus diam, bibendum nec diam id, faucibus ultrices lectus. Praesent ornare mollis tellus, sed tempus quam laoreet at. Phasellus venenatis lacus risus, vitae pharetra magna
+      malesuada vel. Mauris imperdiet congue ex, nec dictum enim facilisis vel.</p>
+    </section>
+  </article>
+</div>
+
+
+
+<div class="para">
+<aside id="fab-wrap">
+    <div id="fab" class="">
+      <div id="fab-action">
+           <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24px" height="24px" viewBox="-129 130.5 24 24">
+          <path d="M-112 133.5h-10c-1.1 0-2 0.9-2 2l0 16l7-3l7 3v-16C-110 134.4-110.9 133.5-112 133.5z M-112 148.5l-5-2.2l-5 2.2v-13h10 V148.5z M-118 144.9h2v-3h3v-2h-3v-3h-2v3h-3v2h3V144.9z"></path>
+          </svg>
+
+        
+      </div>
+    </div>
+  </aside>
+    <div class="background" style="top: 0px;">
+        <div id="header">
+        </div>
+    </div>
+</div>
+
+  <script src="jquery.js"></script>
+
+<script src="index.js"></script>
+<script src="modernizr.js"></script>
+<script src="stopExecutionOnTimeout.js"></script>
+<script>
+$(window).scroll(function (e) {
+    parallax();
+});
+function parallax() {
+    var scrolled = $(window).scrollTop();
+    $('.background').css('top', -(scrolled * 0.5) + 'px');
+}
+$(window).scroll(function () {
+    var wrapper = $('#fab');
+    if ($(window).scrollTop() > 20) {
+        if ($(window).width() > 600) {
+            wrapper.addClass('hidden');
+        }
+    } else {
+        wrapper.removeClass('hidden');
+    }
+});
+$('#fab').on('click', function () {
+    var link = '  <a class=\'link\'><h3>Added link</h3></a>';
+    $('#card1').append(link);
+});
+//@ sourceURL=pen.js
+</script>
+<script src="css_live_reload_init.js"></script>
+</body></html>
