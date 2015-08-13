@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE HTML>
 <!--
 	Prologue by HTML5 UP
 	html5up.net | @n33co
@@ -19,6 +19,7 @@
 		<link rel="stylesheet" type="text/css" href="css/dropdowns-enhancement.css">
 		<link type="text/css" rel="stylesheet" href="css/stylesheet.css">
 		<link type="text/css" rel="stylesheet" href="css/angular.rangeSlider.css">
+		<link type="text/css" rel="stylesheet" href="css/stylesheet-multiselect.css" />
 		
 		<!-- SPELLS -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
@@ -37,6 +38,8 @@
 		
 		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
 		<script src="js/angular.rangeSlider.js"></script>
+        <script src="js/jquery-multiselect.js"></script>
+        <script src="js/angular-multiselect.js"></script>
 		<script src="js/app.js"></script>
 		
 		<noscript>
@@ -153,13 +156,21 @@
 								<div class="form-group">
 									<div class="col-sm-6">
 										<label>Класс защиты:</label>
-										<div range-slider min="protectionclasses.min" max="protectionclasses.max" model-min="formData.protectionclassesmin" model-max="formData.protectionclassesmax" attach-handle-values="true" filter-options="Класс "></div>
+                                        <div ng-model="formData.protectionclasses_ids" id="angular-binary" class="multiselect-wrapper-filter" select-method="multiple" td-multipleselector>
+                                            <ul id="filter-bar" data-target="{{ formData.protectionclasses_ids }}">
+                                                <li ng-repeat="p_class in protectionclasses.classes" class="filter-option" data-target={{p_class._id}}>{{p_class.protectclassname}}</li>
+                                            </ul>
+                                        </div>
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="col-sm-6">
 										<label>Количество замков:</label>
-										<div range-slider min="1" max="2" model-max="formData.lockscount" attach-handle-values="true" pin-handle="min"></div>
+                                        <div ng-model="formData.lockscount" id="angular-binary" class="multiselect-wrapper-filter" select-method="toggle" td-multipleselector>
+                                            <ul id="filter-bar" data-target="{{ formData.lockscount }}">
+                                                <li ng-repeat="lockcount in lockscounts" class="filter-option" data-target="{{ lockcount._id }}">{{ lockcount.name }}</li>
+                                            </ul>
+                                        </div>
 									</div>
 								</div>
 								<div class="form-group">

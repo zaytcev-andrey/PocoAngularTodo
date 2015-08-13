@@ -1,5 +1,5 @@
 // js/app.js
-var pocoTodo = angular.module('pocoTodo', ['ui-rangeSlider'])
+var pocoTodo = angular.module('pocoTodo', ['ui-rangeSlider', 'ui.multopleselector'])
 
 pocoTodo.directive('tdMydir', ['$timeout', function ($timeout) {
     return {
@@ -92,7 +92,13 @@ function SortByKey(array, key) {
 }
 
 function mainController($scope, $http) {
-	$scope.formData = { constructionprotection: 2, protectionclassesmin: 0, protectionclassesmin: 0, lockscount: 1 };
+    $scope.formData = {
+        constructionprotection: 2,
+        protectionclassesmin: 0,
+        protectionclassesmax: 0,
+        protectionclasses_ids: [],
+        lockscount: 1
+    };
 	$scope.protectionclasses = { classes: {}, min: 0, max: 300 };
     $http.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
@@ -139,15 +145,25 @@ function mainController($scope, $http) {
 			$scope.protectionclasses = { classes: data, min: data[0]._id, max: data[data.length-1]._id };            
 			console.log($scope.protectionclasses);
 			console.log('End Protection Classes !!!!!');
+			$scope.formData.protectionclasses_ids = [
+            $scope.protectionclasses.classes[0]._id,
+            $scope.protectionclasses.classes[1]._id].join(',');
         })
         .error(function(data) {
 			console.log('Error Protection Classes !!!!!');
             console.log('Error: ' + data);
         });
 	}
+
+	$scope.getDoorsLocksCount = function () {
+	    $scope.lockscounts = [
+            { _id: 1, name: '1' },
+	        { _id: 2, name: '2' }];
+	}
 	
 	$scope.getDoorsManufacturers();
 	$scope.getDoorsProtectionClasses();
+	$scope.getDoorsLocksCount();
 	
 	// when landing on the page, get all doors and show them
     $http.get('/api/doors', config)
